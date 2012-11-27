@@ -2,7 +2,7 @@
 #
 # Copyright 2012 Janis Jansons (janis.jansons@janhouse.lv)
 #
-# Based on "Better Sessionsave for Pidgin in Perl" by Stefan Gipper
+# Forked from "Better Sessionsave for Pidgin in Perl" by Stefan Gipper
 # https://code.google.com/p/better-sessionsave/
 #
 #
