@@ -403,6 +403,7 @@ sub conv_conversation_created {
 	if($conv->get_type ne 2){#Only IM
 		if($conv->get_name() ne "Global" or $conv->get_name() ne "SpamScanner"){#IRC
 			my $account = encode_for_db($conv->get_name(),'');
+			my $only_account = encode_for_db(remove_crap($conv->get_name())."%",'');
 			my $type = encode_for_db($conv->get_type(),'');
 			my $accountproto = encode_for_db($conv->get_account()->get_protocol_id(),'');
 			my $accountself = encode_for_db($conv->get_account()->get_username(),'');
@@ -414,6 +415,14 @@ sub conv_conversation_created {
 
 			my $time = time;
 			unless($row->{id}){
+				
+				
+	#### Remove stuff that shouldn't be there...
+
+	$dbrestore->do("DELETE FROM `data` WHERE type = $type AND `to` LIKE $only_account AND account = $accountself AND proto = $accountproto");# AND session = $mynewsession");
+
+	#######
+				
 				my $sth = $dbrestore->prepare("INSERT INTO `data` ( 
 				`type`,
 				`to`,
