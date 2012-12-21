@@ -41,7 +41,7 @@ my $des = "Wololotrololo. I be no German.";
 our %PLUGIN_INFO = (
 	perl_api_version => 2,
 	name => "Best SessionSave",
-	version => "0.2",
+	version => "0.3",
 	summary => "SessionSave plugin that works (based on Better Sessionsave by Stefan Gipper",
 	description => $des,
 	author => "Janis Jansons <janis.jansons\@janhouse.lv>",
@@ -452,14 +452,14 @@ sub conv_deleting_conversation {
 	my $conv = shift;#Typ 1=IM, 2=Chat
 	if($conv->get_type ne 2){#Only IM
 		if($conv->get_name() ne "Global" or $conv->get_name() ne "SpamScanner"){#IRC
-			my $account = encode_for_db($conv->get_name(),'');
+			my $account = encode_for_db($conv->get_name()."%",'');
 			my $type = encode_for_db($conv->get_type(),'');
 			my $accountproto = encode_for_db($conv->get_account()->get_protocol_id(),'');
 			my $accountself = encode_for_db($conv->get_account()->get_username(),'');
 
 			&dbmsg("delete conv (" . $conv->get_type . " - " . $conv->get_name() . " - " .  $conv->get_account()->get_username() . ")");
-			$dbrestore->do("DELETE FROM `data` WHERE type = $type AND `to` = $account AND account = $accountself AND proto = $accountproto");# AND session = $mynewsession");
-			#&dbmsg("DELETE FROM `data` WHERE type = '$type' AND to = '$account' AND account = '$accountself' AND proto = '$accountproto' AND session = '$mynewsession'");
+			$dbrestore->do("DELETE FROM `data` WHERE type = $type AND `to` LIKE $account AND account = $accountself AND proto = $accountproto");# AND session = $mynewsession");
+			&dbmsg("DELETE FROM `data` WHERE type = '$type' AND to LIKE '$account' AND account = '$accountself' AND proto = '$accountproto' AND session = '$mynewsession'");
 		}
 	}
 }
